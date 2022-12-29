@@ -1,0 +1,41 @@
+---
+
+- name: Ansible facts
+  debug:
+    msg: "{{ ansible_hostname }}"
+
+- name: make base directory
+  file:
+    path: /{{ ansible_hostname }}
+    state: directory
+
+- name: Add group sbadmin
+  group: 
+    name: sbadmin
+    gid: 1001
+    state: present
+    
+    
+- name: Add user sbadmin
+  user: 
+    name: sbadmin
+    groups: sbadmin
+    shell: /bin/bash
+    home: /{{ ansible_hostname }}
+    state: present
+
+  become_method: "sudo"
+
+- name: Set permissions to homefolder
+  file:
+    path: /{{ ansible_hostname }}
+    owner: sbadmin
+    group: sbadmin
+    mode: '0755'
+
+- name: Add user to sudoers file
+  lineinfile:
+    path: /etc/sudoers
+    regexp: '^sbadmin'
+    line: 'sbadmin ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'

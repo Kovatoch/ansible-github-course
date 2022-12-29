@@ -1,0 +1,16 @@
+---
+#This playbook deploys all site configs
+
+- name: apply base configurations to all nodes
+  hosts: all
+  remote_user: user1
+
+  roles:
+  - base
+
+- name: Configurations SpringBoot
+  hosts: springboot_servers
+  remote_user: user1
+
+  roles:
+  - springboot

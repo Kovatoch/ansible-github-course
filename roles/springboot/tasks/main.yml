@@ -1,0 +1,44 @@
+---
+
+- name: determind sbadmin home-directory
+  tags: set_profile_variable
+  shell: echo $HOME
+  register: user_home
+  become_user: sbadmin
+
+- name: show home-dir
+  debug:
+    msg: "{{ user_home.stdout }}"
+  
+
+- name: setting up facts sbadmins home-directory
+  set_fact:
+    "{{ item.name }}": "{{ user_home.stdout }}/{{ item.value }}"
+  loop: "{{ camel_env_variables }}"
+
+- name: show variables
+  debug:
+    msg: "export ${{ item.name }}={{ user_home.stdout }}/{{ item.value }}"
+  loop: "{{ camel_env_variables }}"
+
+- name: create CAMEL folders
+  file: 
+    path: "{{ user_home.stdout }}/{{ item.value }}"
+    state: directory
+    owner: sbadmin
+    group: sbadmin
+    mode: '0755'
+  loop: "{{ camel_env_variables }}"
+
+- name: "Adding profile variable for CAMEL"
+  tags: set_profile_variable
+  become_user: sbadmin
+  lineinfile:
+    path: "{{ user_home.stdout }}/.bashrc"
+    line: "export {{ item.name }}={{ user_home.stdout }}/{{ item.value }}"
+    state: "{{ item.state }}"
+    owner: sbadmin
+    group: sbadmin
+    create: true
+  loop: "{{ camel_env_variables }}"
+  

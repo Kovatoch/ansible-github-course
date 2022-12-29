@@ -1,0 +1,13 @@
+---
+- name: Get hostname
+  shell: echo $HOSTNAME -s
+  register: result
+
+- debug: 
+    var: result
+
+
+- name: make base directory
+  file:
+    path: /result
+    state: directory

@@ -1,0 +1,7 @@
+camel_env_variables:
+  - { name: 'IKCOMMON', value: 'ik-common', state: present }
+  - { name: 'IK_HOME', value: 'ik-common', state: present }
+  - { name: 'DATADIR', value: 'ik-common/data', state: present }
+  - { name: 'SETUP', value: 'ik-common/setup', state: present }
+  - { name: 'FIXED', value: 'ik-common/fixed', state: present }
+  - { name: 'IKLOG', value: 'ik-common/logs', state: present }

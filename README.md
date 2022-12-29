@@ -1,1 +1,1 @@
-# Ansible course Github
+# ansible-github-course
